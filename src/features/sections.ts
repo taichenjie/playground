@@ -59,6 +59,7 @@ export const sections: Section[] = [
       {
         name: "Sense Check",
         blurb: "Five snap tests of estimating, timing, angles and proportions. How good is your gut?",
+        href: "/daily-games/sense-check",
       },
       { name: "Groupings", blurb: "Sort sixteen words into four hidden categories." },
       { name: "Anagrams", blurb: "Unscramble letters against the clock." },
@@ -78,11 +79,10 @@ export const sections: Section[] = [
     description:
       "Guess the artist from clues, connect albums and eras, and test how well you really know your favourite shows and films.",
     planned: [
-      { name: "Guess the artist", blurb: "Clues get easier the longer you wait." },
-      { name: "Music connections", blurb: "Link artists, albums and decades." },
-      { name: "Discography order", blurb: "Put the releases in chronological order." },
+      { name: "Guess the song", blurb: "Name the daily mystery song from clues that get easier.", href: "/music-tv/guess-the-song" },
+      { name: "Four by Four", blurb: "Sixteen music & TV names, four hidden groups.", href: "/music-tv/four-by-four" },
       { name: "Guess the show", blurb: "Identify a series from plot clues." },
-      { name: "Screen connections", blurb: "Find what links four films or shows." },
+      { name: "Release order", blurb: "Put an artist's albums in chronological order." },
     ],
     accent: { bg: "bg-music", text: "text-music", hex: "#ff7eb6" },
   },
@@ -96,9 +96,9 @@ export const sections: Section[] = [
     description:
       "Player grids, mystery careers and club connections, starting with football and basketball and built on verifiable data.",
     planned: [
+      { name: "Guess the player", blurb: "Progressive clues, fewer guesses, more points.", href: "/sports/guess-the-player" },
+      { name: "Mystery career", blurb: "Name the player from their club timeline.", href: "/sports/mystery-career" },
       { name: "Player grid", blurb: "Fill each cell with a player matching both criteria." },
-      { name: "Mystery career", blurb: "Name the player from their club timeline." },
-      { name: "Guess the player", blurb: "Progressive clues, fewer guesses, more points." },
       { name: "Club connections", blurb: "Find what four clubs or teams have in common." },
       { name: "Stat line", blurb: "Identify a player from a single season’s numbers." },
     ],
@@ -118,9 +118,8 @@ export const sections: Section[] = [
       body: "For entertainment and learning only. Virtual chips have no cash value — there are no deposits, withdrawals, real-money bets or prizes.",
     },
     planned: [
-      { name: "Blackjack", blurb: "Classic 21 against the dealer." },
-      { name: "Basic-strategy trainer", blurb: "Practise the optimal play for every hand." },
-      { name: "Video poker", blurb: "Hold, draw and learn the pay table." },
+      { name: "Blackjack", blurb: "Resorts World Sentosa rules, real chips on the felt and a skill rating.", href: "/casino/blackjack" },
+      { name: "Texas Hold’em", blurb: "Cash games against smart bots. Pick your table size and stakes.", href: "/casino/poker" },
       { name: "Roulette", blurb: "Spin the wheel and see the odds behind each bet." },
       { name: "Hand-ranking trainer", blurb: "Learn which poker hand wins, fast." },
     ],

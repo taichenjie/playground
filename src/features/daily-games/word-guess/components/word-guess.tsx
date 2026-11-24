@@ -19,7 +19,7 @@ import {
 import { hasSeenHelp, loadGuesses, loadStats, markHelpSeen, saveGuesses, saveStats } from "../storage.ts";
 import { HelpContent } from "./help-content";
 import { Keyboard } from "./keyboard";
-import { Modal } from "./modal";
+import { Modal } from "@/components/ui/modal";
 import { StatsContent } from "./stats-content";
 import { Tile } from "./tile";
 

@@ -3,6 +3,7 @@
  * unit-tested with `npm run test`. Relative imports keep their `.ts`
  * extension so Node's test runner can load them directly.
  */
+import { puzzleNumberFor, shuffledOrder } from "../../../lib/daily.ts";
 import { ANSWERS } from "./answers.ts";
 
 export const WORD_LENGTH = 5;
@@ -59,35 +60,11 @@ export function statusFor(guesses: string[], answer: string): GameStatus {
 
 /* ---------- Daily puzzle ---------- */
 
-/** Puzzle #1 is 24 November 2026. A new puzzle starts at local midnight. */
-const LAUNCH_UTC = Date.UTC(2026, 10, 24);
-const DAY_MS = 86_400_000;
+// Puzzle numbering is shared by all daily games (see src/lib/daily.ts).
+export { puzzleNumberFor };
 
-export function puzzleNumberFor(date: Date): number {
-  const localDayUtc = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
-  return Math.max(1, Math.floor((localDayUtc - LAUNCH_UTC) / DAY_MS) + 1);
-}
-
-/** Small seeded PRNG so the shuffled order is identical for everyone. */
-function mulberry32(seed: number) {
-  let a = seed;
-  return () => {
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-const ORDER: number[] = (() => {
-  const order = ANSWERS.map((_, i) => i);
-  const rand = mulberry32(20261124);
-  for (let i = order.length - 1; i > 0; i--) {
-    const j = Math.floor(rand() * (i + 1));
-    [order[i], order[j]] = [order[j], order[i]];
-  }
-  return order;
-})();
+/** Fixed shuffled order of the answers; the seed must never change. */
+const ORDER: number[] = shuffledOrder(ANSWERS.length, 20261124);
 
 export function answerFor(puzzle: number): string {
   return ANSWERS[ORDER[(puzzle - 1) % ORDER.length]];

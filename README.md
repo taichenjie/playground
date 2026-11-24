@@ -44,6 +44,31 @@ Find the hidden five-letter word in six guesses. One shared puzzle per day (puzz
 - Valid guesses: generated into `valid-guesses.ts` from the MIT-licensed [`word-list`](https://github.com/sindresorhus/word-list) package. Run `npm run words` after editing answers.
 - Progress, stats and streaks are saved in the browser's localStorage (no account needed).
 
+### All games
+
+| Section | Game | Route | Type |
+| --- | --- | --- | --- |
+| Daily Games | Word Guess | `/daily-games/word-guess` | Daily |
+| Daily Games | Sense Check — five perception tests | `/daily-games/sense-check` | Daily |
+| Music & TV | Guess the Song — progressive text clues | `/music-tv/guess-the-song` | Daily |
+| Music & TV | Four by Four — find four groups of four | `/music-tv/four-by-four` | Daily |
+| Sports | Guess the Player | `/sports/guess-the-player` | Daily |
+| Sports | Mystery Career — name the player from their clubs | `/sports/mystery-career` | Daily |
+| Casino | Blackjack — Resorts World Sentosa rules, skill rating, strategy chart | `/casino/blackjack` | Unlimited |
+| Casino | Texas Hold’em — no-limit cash game vs bots (2–9 players, 4 difficulties) | `/casino/poker` | Unlimited |
+
+Shared pieces: `src/lib/daily.ts` (puzzle numbering, seeded shuffles, streaks), `src/features/shared/clue-game/` (engine + screen for the three clue games), `src/features/casino/` (cards, economy, chip stacks). Casino games share one persistent **virtual** bankroll (start 1,000; +100 the day after going broke) and five leagues (Bronze → Diamond) with rising table limits. Chips have no monetary value and are never sold.
+
+### ⚠ Content to fact-check before launch
+
+These were drafted with AI assistance and are marked `verified: false`. A person must check each entry against a reliable source before the site goes public:
+
+- `src/features/music-tv/guess-the-song/songs.ts` — 42 songs, clue facts (no lyrics or audio).
+- `src/features/music-tv/four-by-four/puzzles.ts` — 8 puzzles; check every item belongs to exactly one group.
+- `src/features/sports/players.ts` — 26 players: careers, positions, birth years, facts.
+
+Data files are append-only: inserting or removing entries changes every future day's puzzle.
+
 ## Tech stack
 
 - [Next.js 16](https://nextjs.org) (App Router) with React 19
@@ -124,3 +149,16 @@ A suggested pattern, to be confirmed when the first game is chosen:
 - Original games, names, UI and puzzle content only. No copied branding or proprietary puzzles.
 - Casino is simulated play only: virtual chips, no deposits or withdrawals, no real-money bets, no prizes.
 - No backend, database, auth or infrastructure until a feature actually needs it.
+
+## Blackjack rules source
+
+The blackjack table implements **"Blackjack (RWS) Game Rules, Version 5"** (effective 11 June 2019), approved by Singapore's Gambling Regulatory Authority and published at gra.gov.sg → Game Rules for Casinos (RWS) → Blackjack and Pontoon Games. Rules live in `src/features/casino/blackjack/rules.ts` as data so other houses (e.g. Resorts World Genting) can be added once their rules are confirmed. Basic strategy is **computed** from those rules in `strategy.ts` (infinite-deck model, no re-split modelling), not copied from a chart.
+
+## Texas Hold'em
+
+`src/features/casino/poker/`:
+
+- `evaluator.ts` — best-5-of-7 hand scoring and names.
+- `engine.ts` — pure no-limit cash-game state machine (blinds, heads-up rules, minimum raises, incomplete all-ins, side pots, split pots). No UI or browser code, so it can run on a game server when multiplayer arrives. Fuzz-tested over 2,000 random hands for chip conservation.
+- `bots.ts` — Chen-formula preflop + Monte Carlo equity postflop, pot odds, position, personalities; four difficulties (expert reads your tendencies).
+- `session.ts` — buy-in from the bankroll; the table stack is saved after every action and returned to the bankroll if the page is closed.
