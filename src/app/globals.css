@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+/*
+ * PLAYGROUND design tokens — "arcade sticker-book".
+ *
+ * Warm paper, thick ink outlines, hard offset shadows and flat riso-style
+ * colours. One colour per section. Change the palette here and every
+ * component follows.
+ */
+@theme {
+  --color-paper: #f3ede2;
+  --color-paper-deep: #e8dece;
+  --color-ink: #141414;
+  --color-ink-soft: #4a463f;
+  --color-pop: #3b5bff;
+  --color-miss: #a39b8e;
+
+  --color-daily: #ffc93c;
+  --color-music: #ff7eb6;
+  --color-sports: #3dd68c;
+  --color-casino: #ff5a3c;
+
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bungee), var(--font-archivo), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-space-mono), ui-monospace, monospace;
+}
+
+/* Thick ink outline + hard offset shadow. */
+@utility brut {
+  border: 2.5px solid var(--color-ink);
+  box-shadow: 5px 5px 0 0 var(--color-ink);
+}
+
+@utility brut-sm {
+  border: 2px solid var(--color-ink);
+  box-shadow: 3px 3px 0 0 var(--color-ink);
+}
+
+/* Lifts on hover, squashes into its shadow when pressed. */
+@utility press {
+  transition:
+    transform 0.16s cubic-bezier(0.3, 0.7, 0.4, 1.6),
+    box-shadow 0.16s ease;
+  &:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 0 var(--color-ink);
+  }
+  &:active {
+    transform: translate(3px, 3px);
+    box-shadow: 1px 1px 0 0 var(--color-ink);
+  }
+}
+
+/* Archivo is a variable font with a width axis. */
+@utility wide {
+  font-variation-settings: "wdth" 125;
+}
+
+@utility dots {
+  background-image: radial-gradient(
+    color-mix(in oklab, var(--color-ink) 16%, transparent) 1.1px,
+    transparent 1.3px
+  );
+  background-size: 20px 20px;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+::selection {
+  background: var(--color-daily);
+  color: var(--color-ink);
+}
+
+/* Film-grain overlay that shimmers slightly. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.9s steps(4) infinite;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -3%); }
+  75% { transform: translate(-1%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-pop);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@utility wobble {
+  animation: wobble 2.4s ease-in-out infinite;
+}
