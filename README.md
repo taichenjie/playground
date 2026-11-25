@@ -32,6 +32,50 @@ npm run dev      # start the dev server at http://localhost:3000
 | `npm run test`      | Unit tests (Node's built-in test runner)             |
 | `npm run words`     | Regenerates the Word Guess dictionary from `answers.ts` + `word-list` |
 | `npm run check`     | Lint, type-check, test and build in one go           |
+| `npm run faces`     | Builds the Who's That? photo set (see below)         |
+| `npm run faces:upload` | Copies new Who's That? photos to Cloudflare R2    |
+
+## Who's That? photos
+
+Faces come from Wikidata (each person's own portrait image) and Wikimedia
+Commons, keeping only photos whose licence allows reuse with credit. Every
+photo's credit is stored in `src/features/whos-that/faces.json` and shown in
+the game.
+
+1. Add people to `scripts/faces-roster.ts` (English Wikipedia titles, public
+   figures only).
+2. `npm run faces` looks them up, saves compressed WebP photos to
+   `public/faces/` (not committed) and updates `faces.json`. Re-running only
+   fetches new people.
+3. Open http://localhost:3000/whos-that/review while `npm run dev` runs and
+   approve or reject each face. Only approved faces are played.
+4. `npm run faces:upload` copies new photos to Cloudflare R2.
+
+### Setting up Cloudflare R2 (one time)
+
+1. In the Cloudflare dashboard, open **R2** and create a bucket (for example
+   `playground-faces`).
+2. Give it a public address: **Settings → Custom Domains**, add a subdomain
+   you own (for example `faces.yourdomain.com`). The `r2.dev` address works
+   for testing but is rate-limited and not meant for production.
+3. **R2 → Manage API tokens → Create API token** with *Object Read & Write*,
+   limited to that bucket.
+4. Create `.env.local` in the project root (it is git-ignored):
+
+   ```
+   R2_ACCOUNT_ID=...
+   R2_ACCESS_KEY_ID=...
+   R2_SECRET_ACCESS_KEY=...
+   R2_BUCKET=playground-faces
+   NEXT_PUBLIC_FACES_BASE_URL=https://faces.yourdomain.com
+   ```
+
+5. Run `npm run faces:upload`, then set `NEXT_PUBLIC_FACES_BASE_URL` in the
+   hosting provider's environment variables too. Without it, photos are served
+   from `public/faces/`.
+
+Photo keys include a hash of the image, so they can be cached forever; a
+replaced photo gets a new key.
 
 ## Games
 

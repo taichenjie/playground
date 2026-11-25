@@ -55,6 +55,16 @@ export function SectionIcon({ slug, className = "size-6" }: Props) {
           <path d="M12 3c-2.8 2.4-4.2 5.4-4.2 9s1.4 6.6 4.2 9" />
         </svg>
       );
+    case "whos-that":
+      // A head with a question mark.
+      return (
+        <svg {...common}>
+          <circle cx="10" cy="8" r="4.5" />
+          <path d="M2.5 21c0-4.2 3.4-7 7.5-7s7.5 2.8 7.5 7" />
+          <path d="M17.5 4.2c.5-1 1.5-1.7 2.6-1.7 1.5 0 2.6 1.1 2.6 2.4 0 1.9-2.5 2-2.5 3.8" />
+          <circle cx="20.2" cy="11.3" r=".9" fill="currentColor" />
+        </svg>
+      );
     case "casino":
       // A playing card with a diamond pip.
       return (

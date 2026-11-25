@@ -5,12 +5,12 @@ import { useEffect } from "react";
 
 /**
  * Page transition. A template re-mounts on every navigation, so each new
- * page is revealed by four colour panels sliding away. Skipped on the very
+ * page is revealed by colour panels sliding away. Skipped on the very
  * first load so the page isn't hidden while JavaScript starts up.
  */
 let hasNavigated = false;
 
-const PANELS = ["bg-daily", "bg-music", "bg-sports", "bg-casino"];
+const PANELS = ["bg-daily", "bg-music", "bg-sports", "bg-faces", "bg-casino"];
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const animate = hasNavigated;

@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useSpring } from "motion/react";
 
-/** Four-colour progress bar across the top of the page. */
+/** Section-colour progress bar across the top of the page. */
 export function ScrollProgress() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
@@ -13,7 +13,7 @@ export function ScrollProgress() {
       style={{
         scaleX,
         background:
-          "linear-gradient(90deg, var(--color-daily) 0 25%, var(--color-music) 25% 50%, var(--color-sports) 50% 75%, var(--color-casino) 75% 100%)",
+          "linear-gradient(90deg, var(--color-daily) 0 20%, var(--color-music) 20% 40%, var(--color-sports) 40% 60%, var(--color-faces) 60% 80%, var(--color-casino) 80% 100%)",
       }}
     />
   );

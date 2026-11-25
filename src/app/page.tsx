@@ -42,7 +42,7 @@ export default function HomePage() {
       {/* Sections */}
       <section className="mx-auto max-w-6xl px-4 pt-28 sm:px-6" aria-labelledby="sections-heading">
         <Reveal>
-          <p className="font-mono text-sm font-bold">— Four rooms, one place</p>
+          <p className="font-mono text-sm font-bold">— Five rooms, one place</p>
           <h2 id="sections-heading" className="wide mt-1 text-5xl font-black uppercase sm:text-6xl">
             Pick your game
           </h2>

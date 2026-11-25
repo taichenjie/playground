@@ -1,5 +1,5 @@
 /**
- * The four product sections. Navigation, homepage cards and section landing
+ * The product sections. Navigation, homepage cards and section landing
  * pages are all generated from this list, so adding or renaming a section
  * only needs a change here (plus its route folder in src/app).
  *
@@ -7,7 +7,7 @@
  * accent classes are written out in full.
  */
 
-export type SectionSlug = "daily-games" | "music-tv" | "sports" | "casino";
+export type SectionSlug = "daily-games" | "music-tv" | "sports" | "whos-that" | "casino";
 
 export type PlannedFormat = {
   name: string;
@@ -81,6 +81,7 @@ export const sections: Section[] = [
       { name: "Four by Four", blurb: "Sixteen music & TV names, four hidden groups.", href: "/music-tv/four-by-four" },
       { name: "Guess the show", blurb: "Identify a series from plot clues." },
       { name: "Release order", blurb: "Put an artist's albums in chronological order." },
+      { name: "Guess the Celebrity", blurb: "Singers, actors and TV faces against the clock — part of Who’s That?", href: "/whos-that/play?c=celebrities" },
     ],
     accent: { bg: "bg-music", text: "text-music", hex: "#ff7eb6" },
   },
@@ -98,8 +99,29 @@ export const sections: Section[] = [
       { name: "Player grid", blurb: "Fill each cell with a player matching both criteria." },
       { name: "Club connections", blurb: "Find what four clubs or teams have in common." },
       { name: "Stat line", blurb: "Identify a player from a single season’s numbers." },
+      { name: "Guess the Athlete", blurb: "Name the sports star from their photo — part of Who’s That?", href: "/whos-that/play?c=athletes" },
     ],
     accent: { bg: "bg-sports", text: "text-sports", hex: "#3dd68c" },
+  },
+  {
+    slug: "whos-that",
+    name: "Who’s That?",
+    shortName: "Who’s That?",
+    href: "/whos-that",
+    tagline: "Ten famous faces a day. How fast can you name them?",
+    description:
+      "A photo sharpens as the clock runs down — name the athlete, singer, actor, comedian or public figure before time’s up. Play the mix or pick a category, with a Korean edition too.",
+    planned: [
+      { name: "Daily Ten", blurb: "A mix of every category, from around the world. Same set for everyone, every day.", href: "/whos-that/play" },
+      { name: "Athletes", blurb: "Footballers, NBA stars, tennis greats and more.", href: "/whos-that/play?c=athletes" },
+      { name: "Singers", blurb: "Pop, rap, rock and K-pop voices.", href: "/whos-that/play?c=singers" },
+      { name: "Actors", blurb: "Film and TV stars.", href: "/whos-that/play?c=actors" },
+      { name: "Comedians & TV hosts", blurb: "Stand-ups, presenters and talk-show faces.", href: "/whos-that/play?c=comedians" },
+      { name: "YouTubers & creators", blurb: "YouTubers, streamers and internet personalities.", href: "/whos-that/play?c=creators" },
+      { name: "Public figures", blurb: "World leaders, business founders and household names.", href: "/whos-that/play?c=public" },
+      { name: "Korean edition", blurb: "K-pop idols, K-drama actors and Korean TV stars.", href: "/whos-that/play?c=mix&region=korea" },
+    ],
+    accent: { bg: "bg-faces", text: "text-faces", hex: "#a78bfa" },
   },
   {
     slug: "casino",

@@ -21,6 +21,7 @@ export function SectionScene({ slug, size = "sm" }: { slug: SectionSlug; size?: 
       {slug === "daily-games" && <DailyScene />}
       {slug === "music-tv" && <MusicScene />}
       {slug === "sports" && <SportsScene />}
+      {slug === "whos-that" && <FacesScene />}
       {slug === "casino" && <CasinoScene />}
     </div>
   );
@@ -209,6 +210,74 @@ function CasinoScene() {
           </motion.div>
         ))}
       </div>
+    </div>
+  );
+}
+
+/* ---------- Who's That?: a photo that sharpens, then flips to the next face ---------- */
+
+const FACES = [
+  { skin: "#f2c9a0", hair: "#141414", shirt: "#ff7eb6", style: "bob" },
+  { skin: "#8d5a3b", hair: "#2b1a10", shirt: "#3dd68c", style: "short" },
+  { skin: "#e8b48a", hair: "#ffc93c", shirt: "#3b5bff", style: "long" },
+] as const;
+
+function FacesScene() {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = window.setInterval(() => setI((n) => (n + 1) % FACES.length), 2600);
+    return () => window.clearInterval(t);
+  }, []);
+  const f = FACES[i];
+  return (
+    <div className="relative flex h-[14em] w-[18em] items-center justify-center">
+      <motion.div
+        key={i}
+        className="relative h-[12em] w-[10em] rounded-[0.8em] border-[0.3em] border-ink bg-paper p-[0.6em] pb-[2em] shadow-[0.4em_0.4em_0_0_#141414]"
+        initial={{ rotateY: 90, rotate: -4 }}
+        animate={{ rotateY: 0, rotate: i % 2 ? 3 : -3 }}
+        transition={{ type: "spring", stiffness: 180, damping: 16 }}
+      >
+        <motion.svg
+          viewBox="0 0 80 80"
+          className="h-full w-full rounded-[0.4em] border-[0.2em] border-ink bg-[#a78bfa]"
+          initial={{ filter: "blur(6px)", scale: 1.6 }}
+          animate={{ filter: "blur(0px)", scale: 1 }}
+          transition={{ duration: 2, ease: "easeOut" }}
+        >
+          {f.style === "long" && <rect x="20" y="22" width="40" height="40" rx="14" fill={f.hair} />}
+          <path d="M14 80c0-16 12-24 26-24s26 8 26 24z" fill={f.shirt} stroke="#141414" strokeWidth="2.5" />
+          <circle cx="40" cy="34" r="15" fill={f.skin} stroke="#141414" strokeWidth="2.5" />
+          {f.style === "bob" && <path d="M24 34c0-12 8-17 16-17s16 5 16 17c-5-6-11-8-16-8s-11 2-16 8z" fill={f.hair} />}
+          {f.style === "short" && <path d="M26 28c2-8 8-11 14-11s12 3 14 11c-6-3-22-3-28 0z" fill={f.hair} />}
+          {f.style === "long" && <path d="M25 32c0-10 7-15 15-15s15 5 15 15c-4-5-10-6-15-6s-11 1-15 6z" fill={f.hair} />}
+          <circle cx="34.5" cy="35" r="1.8" fill="#141414" />
+          <circle cx="45.5" cy="35" r="1.8" fill="#141414" />
+          <path d="M35 41c3 2.5 7 2.5 10 0" stroke="#141414" strokeWidth="2" fill="none" strokeLinecap="round" />
+        </motion.svg>
+        <motion.span
+          className="absolute inset-x-0 bottom-[0.35em] text-center font-display text-[1.1em]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.6 }}
+        >
+          ???
+        </motion.span>
+      </motion.div>
+      <motion.span
+        className="absolute top-[0.6em] right-[2.2em] flex size-[3.4em] items-center justify-center rounded-full border-[0.3em] border-ink bg-daily font-display text-[1.4em]"
+        animate={{ rotate: [-12, 10, -12], scale: [1, 1.12, 1] }}
+        transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+      >
+        ?
+      </motion.span>
+      <motion.span
+        className="absolute bottom-[1em] left-[2em] rounded-full border-[0.25em] border-ink bg-paper px-[0.6em] font-display text-[1em]"
+        animate={{ scale: [1, 0.92, 1] }}
+        transition={{ duration: 1, repeat: Infinity }}
+      >
+        0:15
+      </motion.span>
     </div>
   );
 }

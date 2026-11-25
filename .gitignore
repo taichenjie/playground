@@ -42,3 +42,6 @@ next-env.d.ts
 
 # local Claude Code preview config (machine-specific paths)
 /.claude/
+
+# Who's That? photos: rebuilt by `npm run faces`, hosted on Cloudflare R2
+/public/faces/
