@@ -11,10 +11,7 @@ export function SectionCard({ section, index }: { section: Section; index: numbe
         href={section.href}
         className={`brut press group dots relative flex min-h-[22rem] flex-col overflow-hidden rounded-[28px] p-6 sm:p-7 ${section.accent.bg}`}
       >
-        <div className="flex items-start justify-between">
-          <span className="rounded-full border-2 border-ink bg-paper px-3 py-1 font-mono text-sm font-bold">
-            {section.number}
-          </span>
+        <div className="flex items-start justify-end">
           <span
             className="flex size-12 items-center justify-center rounded-full border-[2.5px] border-ink bg-paper text-xl transition-transform duration-300 group-hover:-rotate-45 group-hover:bg-ink group-hover:text-paper"
             aria-hidden

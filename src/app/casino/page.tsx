@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SectionLanding } from "@/components/layout/section-landing";
+import { CasinoLobby } from "@/features/casino/components/casino-lobby";
 import { getSection } from "@/features/sections";
 
 const section = getSection("casino");
@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function CasinoPage() {
-  return <SectionLanding section={section} />;
+  return <CasinoLobby />;
 }

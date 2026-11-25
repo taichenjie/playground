@@ -67,7 +67,7 @@ export function PokerTable({
   const crowded = n >= 8;
 
   return (
-    <div className="relative mx-auto h-[clamp(470px,calc(100dvh-268px),720px)] w-full max-w-[1280px]">
+    <div className="relative mx-auto h-[clamp(470px,calc(100dvh-322px),720px)] w-full max-w-[1280px]">
       {/* Rail + felt */}
       <div
         className="absolute inset-x-[5%] inset-y-[13%] rounded-[50%] border-[3px] border-ink p-3 shadow-[6px_8px_0_0_var(--color-ink)] sm:p-4"

@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { GameHeader } from "@/components/games/game-header";
 import { Toast, useToast } from "@/components/games/toast";
@@ -9,7 +8,6 @@ import { burst } from "@/components/motion/burst";
 import { Drawer } from "@/components/ui/drawer";
 import { useHydrated } from "@/lib/use-hydrated";
 import { useProfile, withdraw } from "../../bankroll";
-import { CasinoHud } from "../../components/casino-hud";
 import { ChipFace, ChipStack } from "../../components/chip-stack";
 import { DENOMINATIONS } from "../../economy.ts";
 import { AVATARS, BOT_NAMES, EMPTY_READ, decide, makeTableStyles, type BotStyle, type Read } from "../bots.ts";
@@ -260,9 +258,6 @@ function PokerGame() {
       {/* Top bar */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div className="flex items-baseline gap-2">
-          <Link href="/casino" className="font-mono text-xs font-bold text-ink-soft hover:text-ink">
-            ← Casino
-          </Link>
           <h1 className="wide text-lg leading-none font-black uppercase sm:text-xl">Texas Hold’em</h1>
         </div>
         {game && (
@@ -274,7 +269,6 @@ function PokerGame() {
               Session {net >= 0 ? "+" : ""}
               {net.toLocaleString()}
             </span>
-            <CasinoHud inline />
           </div>
         )}
         <div className="flex flex-wrap items-center gap-1.5 sm:ml-auto">
@@ -297,8 +291,6 @@ function PokerGame() {
           )}
         </div>
       </div>
-
-      {!game && <CasinoHud compact />}
 
       <div className="relative">
         <Toast toast={toast} />

@@ -12,6 +12,8 @@ export type SectionSlug = "daily-games" | "music-tv" | "sports" | "casino";
 export type PlannedFormat = {
   name: string;
   blurb: string;
+  /** Shorter label for tabs, if the name is long. */
+  short?: string;
   /** Set once the game is playable. */
   href?: string;
 };
@@ -21,8 +23,6 @@ export type Section = {
   name: string;
   shortName: string;
   href: `/${SectionSlug}`;
-  /** Two-digit number shown on cards ("01"). */
-  number: string;
   tagline: string;
   description: string;
   planned: PlannedFormat[];
@@ -44,7 +44,6 @@ export const sections: Section[] = [
     name: "Daily Games",
     shortName: "Daily",
     href: "/daily-games",
-    number: "01",
     tagline: "A fresh set of puzzles every day.",
     description:
       "Short word, number and logic puzzles you can finish over a coffee. New challenges every day, the same puzzle for everyone.",
@@ -74,7 +73,6 @@ export const sections: Section[] = [
     name: "Music & TV",
     shortName: "Music & TV",
     href: "/music-tv",
-    number: "02",
     tagline: "Name that artist, show or soundtrack.",
     description:
       "Guess the artist from clues, connect albums and eras, and test how well you really know your favourite shows and films.",
@@ -91,7 +89,6 @@ export const sections: Section[] = [
     name: "Sports",
     shortName: "Sports",
     href: "/sports",
-    number: "03",
     tagline: "Football and basketball knowledge, put to the test.",
     description:
       "Player grids, mystery careers and club connections, starting with football and basketball and built on verifiable data.",
@@ -109,7 +106,6 @@ export const sections: Section[] = [
     name: "Casino",
     shortName: "Casino",
     href: "/casino",
-    number: "04",
     tagline: "Table classics and strategy trainers. Virtual chips only.",
     description:
       "Play blackjack, poker and roulette with virtual chips, and sharpen your strategy with trainers and probability tools.",
@@ -119,9 +115,11 @@ export const sections: Section[] = [
     },
     planned: [
       { name: "Blackjack", blurb: "Resorts World Sentosa rules, real chips on the felt and a skill rating.", href: "/casino/blackjack" },
-      { name: "Texas Hold’em", blurb: "Cash games against smart bots. Pick your table size and stakes.", href: "/casino/poker" },
-      { name: "Roulette", blurb: "Spin the wheel and see the odds behind each bet." },
-      { name: "Hand-ranking trainer", blurb: "Learn which poker hand wins, fast." },
+      { name: "Texas Hold’em", short: "Hold’em", blurb: "Cash games against smart bots. Pick your table size and stakes.", href: "/casino/poker" },
+      { name: "Roulette", blurb: "Single-zero wheel, every inside and outside bet, and the odds behind each one.", href: "/casino/roulette" },
+      { name: "Baccarat", blurb: "Player, Banker or Tie on RWS commission rules, with pairs, Super Six, squeeze and scoreboard roads.", href: "/casino/baccarat" },
+      { name: "Craps", blurb: "Roll the dice, from Pass Line basics to odds bets." },
+      { name: "Card counting trainer", short: "Counting", blurb: "Learn Hi-Lo: keep the running count, convert to a true count and size your bet, at rising speeds.", href: "/casino/card-counting" },
     ],
     accent: { bg: "bg-casino", text: "text-casino", hex: "#ff5a3c" },
   },

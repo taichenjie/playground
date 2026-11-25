@@ -52,30 +52,53 @@ export function LeagueEmblem({ league, tier, size = 48 }: { league: League; tier
   );
 }
 
+/** Thin bar for the casino bar. */
+function MiniBar({ label, value, colour }: { label: string; value: number; colour: string }) {
+  return (
+    <div
+      className="flex items-center gap-1.5 font-mono text-[9px] font-bold uppercase"
+      role="progressbar"
+      aria-label={`${label} toward next league`}
+      aria-valuenow={Math.round(value * 100)}
+      aria-valuemin={0}
+      aria-valuemax={100}
+    >
+      <span className="w-10 text-ink-soft">{label}{value >= 1 && " ✓"}</span>
+      <span className="h-2 flex-1 overflow-hidden rounded-full" style={{ background: "rgba(255,255,255,0.15)" }}>
+        <motion.span
+          className="block h-full rounded-full"
+          style={{ background: colour }}
+          initial={{ width: 0 }}
+          animate={{ width: `${Math.max(value, 0.02) * 100}%` }}
+          transition={{ type: "spring", stiffness: 110, damping: 20 }}
+        />
+      </span>
+    </div>
+  );
+}
+
 function ProgressBar({
   label,
   value,
   detail,
   colour,
-  slim = false,
 }: {
   label: string;
   value: number;
   detail: string;
   colour: string;
-  slim?: boolean;
 }) {
   const done = value >= 1;
   return (
     <div>
-      <p className={`flex justify-between font-mono font-bold ${slim ? "mb-0.5 text-[10px]" : "mb-1 text-[11px]"}`}>
+      <p className={`flex justify-between font-mono font-bold mb-1 text-[11px]`}>
         <span>
           {label} {done && "✓"}
         </span>
         <span>{detail}</span>
       </p>
       <div
-        className={`overflow-hidden rounded-full border-ink bg-paper-deep ${slim ? "h-3 border-2" : "h-4 border-[2.5px]"}`}
+        className={`overflow-hidden rounded-full border-ink bg-paper-deep h-4 border-[2.5px]`}
         role="progressbar"
         aria-label={`${label} toward next league`}
         aria-valuenow={Math.round(value * 100)}
@@ -108,7 +131,7 @@ function ProgressBar({
  * Bankroll + league panel shown on every casino page. Handles the daily
  * refill and announces promotions/relegations.
  */
-export function CasinoHud({ compact = false, inline = false }: { compact?: boolean; inline?: boolean }) {
+export function CasinoHud({ compact = false }: { compact?: boolean }) {
   const profile = useProfile();
   const [announce, setAnnounce] = useState<{ kind: "promoted" | "relegated"; to: League } | null>(null);
 
@@ -121,35 +144,7 @@ export function CasinoHud({ compact = false, inline = false }: { compact?: boole
     [],
   );
 
-  if (!profile) return <div className={inline ? "h-8 w-40" : compact ? "h-[88px]" : "h-[260px]"} />;
-
-  if (inline) {
-    const current = LEAGUES[profile.league];
-    const next = promotionProgress(profile);
-    const pctDone = next ? Math.round(Math.min(next.bankroll, next.hands) * 100) : 100;
-    return (
-      <>
-        <div
-          className="brut-sm flex items-center gap-2 rounded-full py-0.5 pr-3 pl-0.5"
-          style={{ background: current.colour }}
-          title={next ? `${pctDone}% of the way to ${next.to.name}` : "Top league"}
-        >
-          <LeagueEmblem league={current} tier={profile.league} size={26} />
-          <span className="font-display text-[11px] uppercase">{current.name}</span>
-          <span className="font-display text-sm">◎ <CountUp value={profile.bankroll} duration={0.6} /></span>
-          {next && (
-            <span className="flex items-center gap-1 font-mono text-[10px] font-bold">
-              <span className="h-2 w-16 overflow-hidden rounded-full border-2 border-ink bg-paper">
-                <span className="block h-full" style={{ width: `${pctDone}%`, background: next.to.colour }} />
-              </span>
-              {next.to.name}
-            </span>
-          )}
-        </div>
-        <LeagueAnnouncement announce={announce} onClose={() => setAnnounce(null)} />
-      </>
-    );
-  }
+  if (!profile) return <div className={compact ? "h-[38px] w-72" : "h-[260px]"} />;
 
   if (compact) {
     const current = LEAGUES[profile.league];
@@ -159,16 +154,14 @@ export function CasinoHud({ compact = false, inline = false }: { compact?: boole
     const handsLeft = next ? Math.max(0, next.to.handsToPromote - profile.handsInLeague) : 0;
     return (
       <>
-        <section
-          aria-label="Your casino league"
-          className="brut flex flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl px-3 py-2.5 sm:px-4"
-          style={{ background: `linear-gradient(100deg, ${current.colour}88 0%, var(--color-paper) 45%)` }}
-        >
-          <div className="flex items-center gap-2.5">
-            <LeagueEmblem league={current} tier={profile.league} size={44} />
+        <section aria-label="Your casino league" className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+          <div className="flex items-center gap-2">
+            <LeagueEmblem league={current} tier={profile.league} size={34} />
             <div>
-              <p className="font-display text-sm leading-none uppercase">{current.name} league</p>
-              <p className="mt-1 font-display text-2xl leading-none">
+              <p className="font-display text-[11px] leading-none uppercase" style={{ color: current.colour }}>
+                {current.name} league
+              </p>
+              <p className="mt-0.5 font-display text-xl leading-none text-gold">
                 ◎ <CountUp value={profile.bankroll} duration={0.6} />
                 <span className="sr-only"> chips in your bankroll</span>
               </p>
@@ -176,42 +169,27 @@ export function CasinoHud({ compact = false, inline = false }: { compact?: boole
           </div>
 
           {next ? (
-            <div className="min-w-[230px] flex-1">
-              <p className="flex flex-wrap items-center justify-between gap-x-3 font-mono text-[11px] font-bold">
-                <span className="flex items-center gap-1.5">
-                  <LeagueEmblem league={next.to} tier={profile.league + 1} size={18} />
+            <div className="w-[min(100%,300px)]">
+              <p className="flex items-center justify-between gap-2 font-mono text-[10px] font-bold">
+                <span className="flex items-center gap-1">
+                  <LeagueEmblem league={next.to} tier={profile.league + 1} size={14} />
                   Next: {next.to.name}
-                  <span className="hidden text-ink-soft sm:inline">
-                    · unlocks {next.to.blackjack.min}–{next.to.blackjack.max} tables
-                  </span>
                 </span>
-                <span>
+                <span className="text-ink-soft">
                   {chipsLeft === 0 && handsLeft === 0
-                    ? "Promotion on your next hand!"
+                    ? "Promotion next hand!"
                     : [chipsLeft ? `${chipsLeft.toLocaleString()} chips` : null, handsLeft ? `${handsLeft} hands` : null]
                         .filter(Boolean)
                         .join(" · ") + " to go"}
                 </span>
               </p>
-              <div className="mt-1.5 grid grid-cols-2 gap-3">
-                <ProgressBar
-                  label="Chips"
-                  value={next.bankroll}
-                  detail={`${profile.bankroll.toLocaleString()}/${next.to.promoteAt.toLocaleString()}`}
-                  colour={next.to.colour}
-                  slim
-                />
-                <ProgressBar
-                  label="Hands"
-                  value={next.hands}
-                  detail={`${Math.min(profile.handsInLeague, next.to.handsToPromote)}/${next.to.handsToPromote}`}
-                  colour={next.to.colour}
-                  slim
-                />
+              <div className="mt-1 grid grid-cols-2 gap-2">
+                <MiniBar label="Chips" value={next.bankroll} colour={next.to.colour} />
+                <MiniBar label="Hands" value={next.hands} colour={next.to.colour} />
               </div>
             </div>
           ) : (
-            <p className="font-display text-sm">Top league reached 👑</p>
+            <p className="font-display text-sm text-gold">Top league reached 👑</p>
           )}
 
           {isBroke(profile) &&
@@ -246,7 +224,7 @@ export function CasinoHud({ compact = false, inline = false }: { compact?: boole
     <>
       <section
         aria-label="Your casino league"
-        className="brut relative overflow-hidden rounded-[28px] p-5 sm:p-6"
+        className="brut relative overflow-hidden rounded-[28px] bg-paper p-5 sm:p-6"
         style={{ background: `linear-gradient(120deg, ${league.colour}66 0%, var(--color-paper) 55%)` }}
       >
         <div className="grid items-center gap-6 md:grid-cols-[auto_1fr]">

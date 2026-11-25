@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Bungee, Space_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { BurstLayer } from "@/components/motion/burst";
 import { Cursor } from "@/components/motion/cursor";
@@ -9,24 +9,31 @@ import { SiteHeader } from "@/components/navigation/site-header";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
+/*
+ * Fonts are bundled in ./fonts (SIL Open Font License, see the OFL files there)
+ * so the site never depends on reaching Google Fonts at build or run time.
+ */
+
 /** Variable font with weight and width axes (used for the swelling headlines). */
-const archivo = Archivo({
+const archivo = localFont({
   variable: "--font-archivo",
-  subsets: ["latin"],
-  axes: ["wdth"],
+  src: [{ path: "./fonts/archivo-latin-wdth-normal.woff2", weight: "100 900", style: "normal" }],
+  declarations: [{ prop: "font-stretch", value: "62% 125%" }],
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 });
 
 /** Arcade-signage display face for the logo, labels and tickers. */
-const bungee = Bungee({
+const bungee = localFont({
   variable: "--font-bungee",
-  subsets: ["latin"],
-  weight: "400",
+  src: [{ path: "./fonts/bungee-latin-400-normal.woff2", weight: "400", style: "normal" }],
 });
 
-const spaceMono = Space_Mono({
+const spaceMono = localFont({
   variable: "--font-space-mono",
-  subsets: ["latin"],
-  weight: ["400", "700"],
+  src: [
+    { path: "./fonts/space-mono-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/space-mono-latin-700-normal.woff2", weight: "700", style: "normal" },
+  ],
 });
 
 export const metadata: Metadata = {

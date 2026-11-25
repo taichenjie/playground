@@ -18,7 +18,7 @@ export const CHIP_COLOURS: Record<number, [string, string, string]> = {
 export const chipLabel = (v: number) => (v >= 1000 ? `${v / 1000}K` : String(v));
 
 /** One chip seen from the front (for trays and buttons). */
-export function ChipFace({ value, size = 48 }: { value: number; size?: number }) {
+export function ChipFace({ value, size = 48, label }: { value: number; size?: number; label?: string }) {
   const [face, edge, text] = CHIP_COLOURS[value] ?? CHIP_COLOURS[1];
   return (
     <span
@@ -26,7 +26,7 @@ export function ChipFace({ value, size = 48 }: { value: number; size?: number })
       style={{
         width: size,
         height: size,
-        fontSize: size * 0.27,
+        fontSize: size * (label && label.length > 3 ? 0.22 : 0.27),
         color: text,
         background: `repeating-conic-gradient(${face} 0deg 20deg, ${edge} 20deg 30deg)`,
       }}
@@ -35,7 +35,7 @@ export function ChipFace({ value, size = 48 }: { value: number; size?: number })
         className="flex items-center justify-center rounded-full border-2 border-dashed"
         style={{ width: "66%", height: "66%", background: face, borderColor: edge }}
       >
-        {chipLabel(value)}
+        {label ?? chipLabel(value)}
       </span>
     </span>
   );

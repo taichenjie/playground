@@ -19,6 +19,8 @@
   --color-music: #ff7eb6;
   --color-sports: #3dd68c;
   --color-casino: #ff5a3c;
+  --color-gold: #e8b84a;
+  --color-felt: #136b44;
 
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-bungee), var(--font-archivo), ui-sans-serif, sans-serif;
@@ -121,4 +123,38 @@ body::after {
 
 @utility wobble {
   animation: wobble 2.4s ease-in-out infinite;
+}
+
+/*
+ * Casino floor: every page under /casino sits on dark carpet. Free-standing
+ * text turns light; anything with its own background (cards, pills, panels)
+ * keeps dark ink. Kept in the base layer so utility classes still win.
+ */
+@layer base {
+  .casino-floor {
+    color: var(--color-paper);
+    --color-ink-soft: #cbbfa8;
+    background-color: #170a10;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(232, 184, 74, 0.16), transparent 70%),
+      repeating-linear-gradient(45deg, rgba(232, 184, 74, 0.05) 0 2px, transparent 2px 26px),
+      repeating-linear-gradient(-45deg, rgba(232, 184, 74, 0.05) 0 2px, transparent 2px 26px),
+      radial-gradient(ellipse at 50% 30%, #3b1222 0%, #1d0a13 60%, #12070b 100%);
+  }
+  .casino-floor :where([class*="bg-"]) {
+    color: var(--color-ink);
+    --color-ink-soft: #4a463f;
+  }
+}
+
+/* Marquee bulbs that chase around the casino sign. */
+@keyframes bulb {
+  0%, 100% { opacity: 1; box-shadow: 0 0 10px 2px rgba(255, 214, 120, 0.9); }
+  50% { opacity: 0.25; box-shadow: none; }
+}
+.bulb {
+  animation: bulb 1.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bulb { animation: none; }
 }

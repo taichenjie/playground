@@ -23,7 +23,7 @@ export function SectionLanding({ section }: { section: Section }) {
             <Reveal rotate={-8}>
               <span className="brut-sm inline-flex items-center gap-2 rounded-full bg-paper px-4 py-1.5 font-display text-xs">
                 <SectionIcon slug={section.slug} className="size-4" />
-                Section {section.number}
+                {section.tagline}
               </span>
             </Reveal>
             <ProximityText
@@ -83,11 +83,11 @@ export function SectionLanding({ section }: { section: Section }) {
               >
                 <div className="flex items-start justify-between gap-3">
                   <span
-                    className={`flex size-10 items-center justify-center rounded-xl border-[2.5px] border-ink font-mono text-sm font-bold ${
+                    className={`flex size-10 items-center justify-center rounded-xl border-[2.5px] border-ink ${
                       format.href ? "bg-paper" : section.accent.bg
                     }`}
                   >
-                    {String(i + 1).padStart(2, "0")}
+                    <SectionIcon slug={section.slug} className="size-5" />
                   </span>
                   {format.href ? (
                     <span className="brut-sm rounded-full bg-pop px-3 py-1 text-xs font-extrabold text-paper">

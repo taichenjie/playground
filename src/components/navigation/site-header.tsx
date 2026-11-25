@@ -104,7 +104,6 @@ export function SiteHeader() {
                       aria-current={active ? "page" : undefined}
                       className={`brut-sm press flex items-center gap-3 rounded-2xl px-4 py-3 text-lg font-extrabold ${s.accent.bg}`}
                     >
-                      <span className="font-mono text-xs">{s.number}</span>
                       <SectionIcon slug={s.slug} className="size-5" />
                       {s.name}
                       {active && <span className="ml-auto font-display text-xs">YOU ARE HERE</span>}

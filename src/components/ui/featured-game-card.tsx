@@ -17,7 +17,6 @@ export function FeaturedGameCard({ game, index }: { game: FeaturedGame; index: n
           <SectionIcon slug={section.slug} className="size-4" />
           {section.name}
         </span>
-        <span className="font-mono text-xs font-bold">{section.number}</span>
       </div>
       <div className="flex flex-1 flex-col p-5">
         <h3 className="wide text-2xl leading-tight font-black uppercase lg:text-xl xl:text-2xl">{game.title}</h3>

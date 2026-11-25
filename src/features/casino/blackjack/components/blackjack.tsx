@@ -1,7 +1,6 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import Link from "next/link";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { GameHeader } from "@/components/games/game-header";
 import { Toast, useToast } from "@/components/games/toast";
@@ -12,7 +11,7 @@ import { Modal } from "@/components/ui/modal";
 import { readJSON, writeJSON } from "@/lib/storage";
 import { useHydrated } from "@/lib/use-hydrated";
 import { settle as settleBankroll, useProfile, withdraw } from "../../bankroll";
-import { CasinoHud, LeagueBadge } from "../../components/casino-hud";
+import { LeagueBadge } from "../../components/casino-hud";
 import { ChipFace, ChipStack } from "../../components/chip-stack";
 import { PlayingCard } from "../../components/playing-card";
 import { DENOMINATIONS, LEAGUES } from "../../economy.ts";
@@ -329,9 +328,6 @@ function BlackjackTable() {
       {/* Top bar: everything above the felt in one row */}
       <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2">
         <div className="flex items-baseline gap-2">
-          <Link href="/casino" className="font-mono text-xs font-bold text-ink-soft hover:text-ink">
-            ← Casino
-          </Link>
           <h1 className="wide text-lg leading-none font-black uppercase sm:text-2xl">Blackjack</h1>
         </div>
         <div className="flex flex-wrap items-center gap-1.5 font-mono text-[11px] font-bold">
@@ -386,8 +382,6 @@ function BlackjackTable() {
           </button>
         </div>
       </div>
-
-      <CasinoHud compact />
 
       {/* Table */}
       <div
@@ -529,7 +523,7 @@ function BlackjackTable() {
         {game.phase === "betting" && (
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
             <p className="w-full text-center font-mono text-[11px] font-bold text-ink-soft">
-              Chips go on: <span className="text-ink">{spot === "main" ? "main bet" : SPOT_LABEL[spot]}</span> — tap a circle on the felt to switch
+              Chips go on: <span className="text-gold">{spot === "main" ? "main bet" : SPOT_LABEL[spot]}</span> — tap a circle on the felt to switch
             </p>
             <div className="flex flex-wrap justify-center gap-2">
               {chips.map((v) => (
