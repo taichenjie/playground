@@ -140,7 +140,7 @@ export const sections: Section[] = [
       { name: "Texas Hold’em", short: "Hold’em", blurb: "Cash games against smart bots. Pick your table size and stakes.", href: "/casino/poker" },
       { name: "Roulette", blurb: "Single-zero wheel, every inside and outside bet, and the odds behind each one.", href: "/casino/roulette" },
       { name: "Baccarat", blurb: "Player, Banker or Tie on RWS commission rules, with pairs, Super Six, squeeze and scoreboard roads.", href: "/casino/baccarat" },
-      { name: "Craps", blurb: "Roll the dice, from Pass Line basics to odds bets." },
+      { name: "Craps", blurb: "Pass Line, Come, odds, place bets, hardways and the whole proposition box, on Las Vegas rules.", href: "/casino/craps" },
       { name: "Card counting trainer", short: "Counting", blurb: "Learn Hi-Lo: keep the running count, convert to a true count and size your bet, at rising speeds.", href: "/casino/card-counting" },
     ],
     accent: { bg: "bg-casino", text: "text-casino", hex: "#ff5a3c" },
