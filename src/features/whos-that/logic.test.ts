@@ -17,6 +17,7 @@ import {
   pointsFor,
   poolFor,
   rankFor,
+  singleNames,
   slips,
   summarize,
   tierAt,
@@ -188,5 +189,46 @@ describe("scoring", () => {
     assert.equal(s.counts.get("lightning"), 2);
     assert.equal(rankFor(2500), "Face oracle");
     assert.equal(rankFor(0), "Who are these people?");
+  });
+});
+
+describe("one-name answers", () => {
+  const p = (id: string, name: string, extra: Partial<{ category: Category; korean: boolean; country: string }> = {}) => ({
+    id,
+    name,
+    category: "athletes" as Category,
+    korean: false,
+    ...extra,
+  });
+  const lib = [
+    p("km", "Kylian Mbappé"),
+    p("es", "Ed Sheeran", { category: "singers" }),
+    p("ts", "Taylor Swift", { category: "singers" }),
+    p("sw", "Serena Williams"),
+    p("vw", "Venus Williams"),
+    p("kdb", "Kevin De Bruyne"),
+    p("rdj", "Robert Downey Jr.", { category: "actors" }),
+    p("shm", "Son Heung-min", { korean: true }),
+    p("lcw", "Lee Chong Wei", { country: "my" }),
+    p("di", "Diana, Princess of Wales", { category: "public" }),
+    p("mt", "Mike Tyson"),
+    p("tf", "Tyson Fury"),
+  ];
+  const one = (id: string) => singleNames(lib.find((x) => x.id === id)!, lib);
+  it("accepts a distinctive first name or surname", () => {
+    assert.deepEqual(one("km"), ["Kylian", "Mbappé"]);
+    assert.deepEqual(one("kdb"), ["De Bruyne"]);
+    assert.deepEqual(one("rdj"), ["Downey"]);
+  });
+  it("refuses short, everyday or shared names", () => {
+    assert.deepEqual(one("es"), ["Sheeran"], "Ed is too short");
+    assert.deepEqual(one("ts"), ["Swift"], "Taylor is an everyday first name");
+    assert.deepEqual(one("sw"), ["Serena"], "Williams is shared with Venus (and common)");
+    assert.deepEqual(one("mt"), [], "Mike is everyday, Tyson is Tyson Fury's first name");
+  });
+  it("needs the full name for family-name-first names and titles", () => {
+    assert.deepEqual(one("shm"), []);
+    assert.deepEqual(one("lcw"), []);
+    assert.deepEqual(one("di"), []);
   });
 });

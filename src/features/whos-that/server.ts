@@ -10,6 +10,7 @@ import {
   pickRound,
   poolFor,
   revealed,
+  singleNames,
   words,
   type Face,
   type Filters,
@@ -27,20 +28,23 @@ type Stored = Face & { qid: string; status: "unreviewed" | "approved" | "rejecte
 const dev = process.env.NODE_ENV === "development";
 
 /**
- * Accepted answers for a face: Wikidata aliases plus listed nicknames, minus
- * one-word aliases that are just part of the full name ("Woods" for Tiger
- * Woods). A surname or first name alone only counts when listed as a nickname.
+ * Accepted answers for a face: Wikidata aliases, listed nicknames, and the
+ * first name or surname alone where the one-name rule allows it (see
+ * singleNames). Other one-word aliases that are just part of the full name
+ * ("Woods" from Wikidata) are dropped, so the rule alone decides those.
  */
-function answersOf(f: Stored): string[] {
+function answersOf(f: Stored, library: Stored[]): string[] {
   const full = words(f.name);
   const kept = f.aliases.filter((a) => {
     const w = words(a);
     return !(full.length >= 2 && w.length === 1 && full.includes(w[0]));
   });
-  return [...new Set([...kept, ...(NICKNAMES[f.name] ?? [])])];
+  return [...new Set([...kept, ...singleNames(f, library), ...(NICKNAMES[f.name] ?? [])])];
 }
 
-const stored = (allFaces as unknown as Stored[]).map((f) => ({ ...f, aliases: answersOf(f) }));
+const raw = allFaces as unknown as Stored[];
+const pool = raw.filter((f) => f.status !== "rejected");
+const stored = raw.map((f) => ({ ...f, aliases: answersOf(f, pool) }));
 
 /**
  * Faces that can be played. Only approved ones — except while developing,

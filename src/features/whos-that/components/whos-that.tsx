@@ -649,7 +649,7 @@ function Game({ puzzle, params }: { puzzle: number; params: URLSearchParams }) {
                 </button>
               </div>
               <p className="font-mono text-[11px] text-ink-soft">
-                {MAX_GUESSES - guesses} guess{MAX_GUESSES - guesses === 1 ? "" : "es"} left · full name, stage name or Korean name · small
+                {MAX_GUESSES - guesses} guess{MAX_GUESSES - guesses === 1 ? "" : "es"} left · full name, or a famous first name or surname alone · small
                 typos are forgiven
               </p>
             </>

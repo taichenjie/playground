@@ -32,6 +32,11 @@ export const NICKNAMES: Record<string, string[]> = {
   "Giannis Antetokounmpo": ["Giannis"],
   "Nikola Jokić": ["Jokic"],
   "Kylian Mbappé": ["Mbappe"],
+  // Family-name-first players fans call by their given name.
+  "Lee Chong Wei": ["Chong Wei", "LCW"],
+  "Loh Kean Yew": ["Kean Yew"],
+  "Yao Ming": ["Yao"],
+  "Lin Dan": ["Super Dan"],
   // Stage names whose full names Wikidata doesn't list as aliases.
   Miley: ["Miley Cyrus"],
   Zendaya: ["Zendaya Coleman"],

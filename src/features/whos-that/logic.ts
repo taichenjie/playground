@@ -44,6 +44,8 @@ export type Face = {
   image: string;
   credit: Credit;
   region: Region;
+  /** ISO country code of citizenship, lower case, if known. */
+  country?: string;
   born: number | null;
   sport: string | null;
   /** Number of language Wikipedias with an article on them. */
@@ -342,6 +344,103 @@ export function judge(guess: string, face: Pick<Face, "id" | "name" | "aliases">
 
 export const isCorrect = (guess: string, f: Pick<Face, "id" | "name" | "aliases">, everyone?: Pick<Face, "id" | "name" | "aliases">[]) =>
   judge(guess, f, everyone).correct;
+
+/* ---------- One-name answers ---------- */
+
+/**
+ * Everyday first names: too generic to identify anyone on their own
+ * ("Taylor", "Ed", "Chris"), so they never count as a one-word answer.
+ */
+const COMMON_FIRST = new Set(
+  `aaron adam adrian alan albert alex alexander alexandra alice alicia amanda amy andre andrea andrew andy angela anna anne anthony ashley
+  barbara ben benjamin bill billy bob bobby brad brandon brian bruce bruno caleb carl carlos caroline catherine charles charlie chris
+  christian christina christopher claire colin craig dan daniel danny dave david dean dennis diana diane donald doug douglas ed eddie
+  edward elizabeth ellen emily emma eric erik frank fred gary george grace greg harry helen henry ian jack jacob jake james jamie jane
+  jason jay jeff jennifer jenny jerry jessica jim jimmy joe joel john johnny jon jonathan jordan jose joseph josh julia julie justin karen
+  kate katie keith kelly kevin kim kyle larry laura lauren lee leo lewis linda lisa louis lucas luke luis maria mark martin mary matt
+  matthew megan michael michelle mike nancy nathan nick nicole noah oliver olivia patrick paul peter phil philip rachel ray richard rick
+  rob robert robin roger ron ryan sam samuel sara sarah scott sean simon sophie stephen steve steven sue susan taylor ted thomas tim
+  tom tommy tony travis victor vincent walter wayne will william zach`.split(/\s+/),
+);
+
+/** Very common surnames: typing one alone doesn't point to a single famous person. */
+const COMMON_SURNAMES = new Set(
+  `smith johnson williams brown jones miller davis wilson anderson taylor thomas moore martin jackson thompson white harris clark lewis
+  robinson walker young allen king wright scott green baker adams nelson hill campbell mitchell roberts carter phillips evans turner
+  parker collins edwards stewart morris murphy cook rogers morgan cooper peterson reed bailey bell kelly howard ward cox richardson wood
+  watson brooks bennett gray james hughes price sanders myers long ross foster lee kim park choi chen wang wong li zhang liu garcia
+  rodriguez martinez hernandez lopez gonzalez perez sanchez ramirez torres silva santos`.split(/\s+/),
+);
+
+/** Particles that belong to the surname: "De Bruyne", "van Dijk", "Del Piero". */
+const PARTICLES = new Set(["de", "van", "von", "der", "den", "del", "della", "di", "da", "dos", "du", "la", "le", "al", "bin", "el"]);
+const SUFFIX = /^(jr|sr|ii|iii|iv)\.?$/i;
+/** Royal and religious titles: these people need their full title or a listed nickname. */
+const TITLED = /,|\b(pope|prince|princess|king|queen|duke|duchess|dalai|lama|sir|dame)\b|\b(ii|iii|iv|xiv)$/i;
+
+/** The first name and full surname of a Western-order name, or null when the rule doesn't apply. */
+export function nameParts(name: string): { first: string; surname: string } | null {
+  const plain = name.replace(/\s*\(.*\)$/, "").trim();
+  if (TITLED.test(plain)) return null;
+  const parts = plain.split(/\s+/).filter((p) => !SUFFIX.test(p));
+  if (parts.length < 2) return null;
+  let i = parts.length - 1;
+  while (i > 1 && PARTICLES.has(parts[i - 1].toLowerCase())) i--;
+  return { first: parts[0], surname: parts.slice(i).join(" ") };
+}
+
+type Named = Pick<Face, "id" | "name" | "category" | "korean"> & { country?: string };
+
+/** Places where names are usually written family name first in English. */
+const FAMILY_FIRST = new Set(["cn", "tw", "hk", "mo", "sg", "my"]);
+
+/**
+ * Chinese-style names written family name first ("Lee Chong Wei", "Yao
+ * Ming"): short syllables, no English given name in front. Korean names are
+ * flagged separately.
+ */
+const familyFirst = (f: Named) => {
+  if (!f.country || !FAMILY_FIRST.has(f.country)) return false;
+  const syllables = f.name.replace(/\s*\(.*\)$/, "").split(/[\s-]+/);
+  return !COMMON_FIRST.has(normalize(syllables[0])) && syllables.every((s) => s.length <= 5);
+};
+
+/**
+ * One-word answers a face accepts on top of its full name. A first name or
+ * surname counts alone when all of these hold:
+ *  1. the name is in Western order: Korean and Chinese-style names (family
+ *     name first) and royal or religious titles always need the full name;
+ *  2. it's at least 4 letters ("Ed", "Kim", "Yao" are too short to be sure);
+ *  3. it isn't an everyday first name or a very common surname
+ *     ("Taylor", "Chris", "Smith", "Lewis");
+ *  4. nobody else in the library shares it, as a first name or surname
+ *     ("Williams" could be Serena or Venus, "Obama" Barack or Michelle).
+ * Listed nicknames (Messi, Shaq, Ali, Sonny) are added separately and
+ * always count, so this rule only ever adds answers.
+ */
+export function singleNames(face: Named, library: Named[]): string[] {
+  if (face.korean || familyFirst(face)) return [];
+  const parts = nameParts(face.name);
+  if (!parts) return [];
+  const taken = new Map<string, number>();
+  for (const other of library) {
+    const p = nameParts(other.name);
+    // One-word names ("Ronaldo", "Neymar") also block that word for others.
+    const ws = p ? [p.first, p.surname] : words(other.name).length === 1 ? [other.name.replace(/\s*\(.*\)$/, "")] : [];
+    for (const w of new Set(ws.map(normalize))) taken.set(w, (taken.get(w) ?? 0) + 1);
+  }
+  const out: string[] = [];
+  for (const [word, common] of [
+    [parts.first, COMMON_FIRST],
+    [parts.surname, COMMON_SURNAMES],
+  ] as const) {
+    const n = normalize(word);
+    if (n.length < 4 || common.has(n)) continue;
+    if ((taken.get(n) ?? 0) > 1) continue;
+    out.push(word);
+  }
+  return out;
+}
 
 export function initials(name: string) {
   return words(name.replace(/-/g, " "))
